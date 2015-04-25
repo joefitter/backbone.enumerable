@@ -6,6 +6,7 @@ Backbone.Enumerable = (function(Backbone, _) {
     this._items = [];
     this._currentItem = null;
     this._currentIndex = null;
+    this._type = null;
     this._updateLength();
     _.each(items, this.add, this);
     this._setCurrentItem();
@@ -20,6 +21,12 @@ Backbone.Enumerable = (function(Backbone, _) {
     **/
 
     add: function(item, index) {
+      if (!this._items.length) {
+        this._setType(item);
+      }
+      if (!(item instanceof this._type)) {
+        throw new Error('Wrong type supplied.');
+      }
       if (index === undefined) {
         this._items.push(item);
       } else {
@@ -85,6 +92,11 @@ Backbone.Enumerable = (function(Backbone, _) {
     Private Methods
 
     **/
+
+    _setType: function(item) {
+      this._type = item.constructor;
+      return this;
+    },
 
     _traverse: function(change) {
       if (!this._currentItem) {

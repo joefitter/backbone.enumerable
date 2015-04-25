@@ -15,16 +15,47 @@ describe('Backbone.Enumerable', function() {
     enumerable = new Backbone.Enumerable(models);
   });
 
-  it('should have a length of 3', function() {
-    expect(enumerable.length).to.be(3);
+  describe('Initialisation', function() {
+    it('should have a length of 3', function() {
+      expect(enumerable.length).to.be(3);
+    });
+
+    it('should have a currentItem', function() {
+      expect(enumerable._currentItem).to.be.ok();
+    });
+
+    it('should start on 0 index if items are passed', function() {
+      expect(enumerable._currentIndex).to.be(0);
+    });
   });
 
-  it('should have a currentItem', function() {
-    expect(enumerable._currentItem).to.be.ok();
-  });
+  describe('Public Methods', function() {
 
-  it('should start on 0 index if items are passed', function() {
-    expect(enumerable._currentIndex).to.be(0);
+    describe('add()', function() {
+      var model;
+
+      beforeEach(function() {
+        model = new Backbone.Model();
+      });
+
+      it('should throw an error if the wrong type is added', function() {
+        var collection = new Backbone.Collection();
+        expect(function() {
+          enumerable.add(collection);
+        }).to.throwException(/Wrong type supplied/);
+      });
+
+      it('should add an item to the end of the enumerable if no index is supplied', function() {
+        enumerable.add(model);
+        expect(enumerable._items[enumerable._items.length - 1]).to.be(model);
+      });
+
+      it('should add an item at a specific index', function() {
+        enumerable.add(model, 0);
+        expect(enumerable._items[0]).to.be(model);
+      });
+    });
+
   });
 
   it('its length should increase if a new item is added', function() {
