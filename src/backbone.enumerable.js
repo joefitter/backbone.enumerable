@@ -72,6 +72,20 @@ Backbone.Enumerable = (function(Backbone, _) {
       this._traverse(-1);
     },
 
+    getNext: function() {
+      if (this._currentIndex === this.length - 1) {
+        return this._items[0];
+      }
+      return this._items[this._currentIndex + 1]
+    },
+
+    getPrev: function() {
+      if (this._currentIndex === 0) {
+        return this._items[this.length - 1];
+      }
+      return this._items[this._currentIndex - 1];
+    },
+
     getCurrentItem: function() {
       return this._currentItem;
     },
@@ -102,6 +116,14 @@ Backbone.Enumerable = (function(Backbone, _) {
       if (!this._currentItem) {
         return false;
       }
+      var index = this._currentIndex + change;
+      if (index === -1) {
+        index = this.length - 1;
+      }
+      if (index === this.length) {
+        index = 0;
+      }
+      this._setCurrentItem(this._items[index]);
     },
 
     _getCurrentItemIndex: function() {
