@@ -25,6 +25,7 @@
       this._items = [];
       this._currentItem = null;
       this._currentIndex = null;
+      this._type = null;
       this._updateLength();
       _.each(items, this.add, this);
       this._setCurrentItem();
@@ -32,7 +33,19 @@
   
     _.extend(Enumerable.prototype, {
   
+      /**
+  
+      Public Methods
+  
+      **/
+  
       add: function(item, index) {
+        if (!this._items.length) {
+          this._setType(item);
+        }
+        if (!(item instanceof this._type)) {
+          throw new Error('Wrong type supplied.');
+        }
         if (index === undefined) {
           this._items.push(item);
         } else {
@@ -78,10 +91,18 @@
         this._traverse(-1);
       },
   
-      _traverse: function(change) {
-        if (!this._currentItem) {
-          return false;
+      getNext: function() {
+        if (this._currentIndex === this.length - 1) {
+          return this._items[0];
         }
+        return this._items[this._currentIndex + 1]
+      },
+  
+      getPrev: function() {
+        if (this._currentIndex === 0) {
+          return this._items[this.length - 1];
+        }
+        return this._items[this._currentIndex - 1];
       },
   
       getCurrentItem: function() {
@@ -97,6 +118,31 @@
           return false;
         }
         this._setCurrentItem(item);
+      },
+  
+      /**
+  
+      Private Methods
+  
+      **/
+  
+      _setType: function(item) {
+        this._type = item.constructor;
+        return this;
+      },
+  
+      _traverse: function(change) {
+        if (!this._currentItem) {
+          return false;
+        }
+        var index = this._currentIndex + change;
+        if (index === -1) {
+          index = this.length - 1;
+        }
+        if (index === this.length) {
+          index = 0;
+        }
+        this._setCurrentItem(this._items[index]);
       },
   
       _getCurrentItemIndex: function() {
@@ -126,11 +172,28 @@
   
     });
   
+    // Mix in methods from Underscore, for iteration, and other
+    // collection related features.
+    // Borrowing this code from Backbone.Collection:
+    // http://backbonejs.org/docs/backbone.html#section-121
+    var methods = ['forEach', 'each', 'map', 'find', 'detect', 'filter',
+      'select', 'reject', 'every', 'all', 'some', 'any', 'include',
+      'contains', 'invoke', 'toArray', 'first', 'initial', 'rest',
+      'last', 'without', 'isEmpty', 'pluck'];
+  
+    _.each(methods, function(method) {
+      Enumerable.prototype[method] = function() {
+        var items = _.values(this._items);
+        var args = [items].concat(_.toArray(arguments));
+        return _[method].apply(_, args);
+      };
+    });
+  
     return Enumerable;
   })(Backbone, _);
   
 
-  Backbone.Enumerable.VERSION = '0.0.0';
+  Backbone.Enumerable.VERSION = '<%= version %>';
 
   Backbone.Enumerable.noConflict = function() {
     Backbone.Enumerable = previousEnumerable;
