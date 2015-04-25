@@ -49,14 +49,6 @@ Backbone.Enumerable = (function(Backbone, _) {
       return this;
     },
 
-    first: function() {
-      return this._items.length ? this._items[0] : null;
-    },
-
-    last: function() {
-      return this._items.length ? this._items[this._items.length - 1] : null;
-    },
-
     get: function(index) {
       if (index === undefined) {
         return null;
