@@ -131,5 +131,22 @@ Backbone.Enumerable = (function(Backbone, _) {
 
   });
 
+  // Mix in methods from Underscore, for iteration, and other
+  // collection related features.
+  // Borrowing this code from Backbone.Collection:
+  // http://backbonejs.org/docs/backbone.html#section-121
+  var methods = ['forEach', 'each', 'map', 'find', 'detect', 'filter',
+    'select', 'reject', 'every', 'all', 'some', 'any', 'include',
+    'contains', 'invoke', 'toArray', 'first', 'initial', 'rest',
+    'last', 'without', 'isEmpty', 'pluck'];
+
+  _.each(methods, function(method) {
+    Enumerable.prototype[method] = function() {
+      var items = _.values(this._items);
+      var args = [items].concat(_.toArray(arguments));
+      return _[method].apply(_, args);
+    };
+  });
+
   return Enumerable;
 })(Backbone, _);

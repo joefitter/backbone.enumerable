@@ -56,6 +56,28 @@ describe('Backbone.Enumerable', function() {
       });
     });
 
+    describe('remove()', function() {
+
+      it('should remove the last item if called with no arguments', function() {
+        var last = enumerable._items[enumerable._items.length - 1];
+        enumerable.remove();
+        expect(enumerable._items.indexOf(last)).to.be(-1);
+      });
+
+      it('should remove an item at a specific index if an index is passed', function() {
+        var index = 1;
+        var item = enumerable._items[index];
+        enumerable.remove(index);
+        expect(enumerable._items.indexOf(item)).to.be(-1);
+      });
+
+      it('should update the length on removing an item', function() {
+        enumerable.remove();
+        expect(enumerable.length).to.be(2);
+      });
+
+    });
+
   });
 
   it('its length should increase if a new item is added', function() {
