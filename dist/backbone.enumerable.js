@@ -23,20 +23,18 @@
   
     var Enumerable = function(items) {
       this._items = [];
-      this._currentItem = null;
-      this._currentIndex = null;
+      this._index = null;
       this._type = null;
-      this._updateLength();
+      this.length = 0;
       _.each(items, this.add, this);
-      this._setCurrentItem();
     };
   
     _.extend(Enumerable.prototype, {
   
       /**
-  
-      Public Methods
-  
+      *
+      * Public Methods
+      *
       **/
   
       add: function(item, index) {
@@ -68,19 +66,11 @@
         return this;
       },
   
-      first: function() {
-        return this._items.length ? this._items[0] : null;
-      },
-  
-      last: function() {
-        return this._items.length ? this._items[this._items.length - 1] : null;
-      },
-  
       get: function(index) {
         if (index === undefined) {
           return null;
         }
-        return this._items[index] ? this._items[index] : null;
+        return this._items[index] || null;
       },
   
       next: function() {
@@ -105,19 +95,15 @@
         return this._items[this._currentIndex - 1];
       },
   
-      getCurrentItem: function() {
-        return this._currentItem;
+      getIndex: function() {
+        return this._index;
       },
   
-      getCurrentIndex: function() {
-        return this._currentIndex;
-      },
-  
-      setCurrentItem: function(item) {
-        if (item === undefined) {
+      setIndex: function(index) {
+        if (index < 0 || index > this._items.length - 1) {
           return false;
         }
-        this._setCurrentItem(item);
+        this._index = index;
       },
   
       /**
@@ -132,7 +118,7 @@
       },
   
       _traverse: function(change) {
-        if (!this._currentItem) {
+        if (!this._index || this.length === 0) {
           return false;
         }
         var index = this._currentIndex + change;
@@ -143,27 +129,6 @@
           index = 0;
         }
         this._setCurrentItem(this._items[index]);
-      },
-  
-      _getCurrentItemIndex: function() {
-        if (!this._currentItem) {
-          return false;
-        }
-        return _.indexOf(this._items, this._currentItem);
-      },
-  
-      _setCurrentItem: function(item) {
-        if (item === undefined) {
-          this._currentItem = this.first();
-        } else if (this._getCurrentItemIndex() > -1) {
-          this._currentItem = item;
-        }
-        this._setCurrentIndex();
-        return this;
-      },
-  
-      _setCurrentIndex: function() {
-        this._currentIndex = this._getCurrentItemIndex();
       },
   
       _updateLength: function() {

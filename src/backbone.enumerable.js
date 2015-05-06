@@ -4,20 +4,19 @@ Backbone.Enumerable = (function(Backbone, _) {
 
   var Enumerable = function(items) {
     this._items = [];
-    this._currentItem = null;
-    this._currentIndex = null;
+    this._index = 0;
     this._type = null;
-    this._updateLength();
+    this.length = 0;
+
     _.each(items, this.add, this);
-    this._setCurrentItem();
   };
 
   _.extend(Enumerable.prototype, {
 
     /**
-
-    Public Methods
-
+    *
+    * Public Methods
+    *
     **/
 
     add: function(item, index) {
@@ -51,52 +50,47 @@ Backbone.Enumerable = (function(Backbone, _) {
 
     get: function(index) {
       if (index === undefined) {
-        return null;
+        return undefined;
       }
-      return this._items[index] ? this._items[index] : null;
+      return this._items[index] || undefined;
     },
 
     next: function() {
       this._traverse(1);
+      return this;
     },
 
     prev: function() {
       this._traverse(-1);
+      return this;
     },
 
     getNext: function() {
-      if (this._currentIndex === this.length - 1) {
-        return this._items[0];
-      }
-      return this._items[this._currentIndex + 1]
+      this.next()
+      return this.get(this._index);
     },
 
     getPrev: function() {
-      if (this._currentIndex === 0) {
-        return this._items[this.length - 1];
-      }
-      return this._items[this._currentIndex - 1];
+      this.prev();
+      return this.get(this._index);
     },
 
-    getCurrentItem: function() {
-      return this._currentItem;
+    getIndex: function() {
+      return this._index;
     },
 
-    getCurrentIndex: function() {
-      return this._currentIndex;
-    },
-
-    setCurrentItem: function(item) {
-      if (item === undefined) {
+    setIndex: function(index) {
+      if (index < 0 || index > this._items.length - 1) {
         return false;
       }
-      this._setCurrentItem(item);
+      this._index = index;
+      return this._index;
     },
 
     /**
-
-    Private Methods
-
+    *
+    * Private Methods
+    *
     **/
 
     _setType: function(item) {
@@ -105,38 +99,17 @@ Backbone.Enumerable = (function(Backbone, _) {
     },
 
     _traverse: function(change) {
-      if (!this._currentItem) {
+      if (this.length === 0) {
         return false;
       }
-      var index = this._currentIndex + change;
+      var index = this._index + change;
       if (index === -1) {
         index = this.length - 1;
       }
       if (index === this.length) {
         index = 0;
       }
-      this._setCurrentItem(this._items[index]);
-    },
-
-    _getCurrentItemIndex: function() {
-      if (!this._currentItem) {
-        return false;
-      }
-      return _.indexOf(this._items, this._currentItem);
-    },
-
-    _setCurrentItem: function(item) {
-      if (item === undefined) {
-        this._currentItem = this.first();
-      } else if (this._getCurrentItemIndex() > -1) {
-        this._currentItem = item;
-      }
-      this._setCurrentIndex();
-      return this;
-    },
-
-    _setCurrentIndex: function() {
-      this._currentIndex = this._getCurrentItemIndex();
+      return this.setIndex(index);
     },
 
     _updateLength: function() {
@@ -150,7 +123,7 @@ Backbone.Enumerable = (function(Backbone, _) {
   // Borrowing this code from Backbone.Collection:
   // http://backbonejs.org/docs/backbone.html#section-121
   var methods = ['forEach', 'each', 'map', 'find', 'detect', 'filter',
-    'select', 'reject', 'every', 'all', 'some', 'any', 'include',
+    'select', 'reject', 'every', 'all', 'some', 'any', 'includes',
     'contains', 'invoke', 'toArray', 'first', 'initial', 'rest',
     'last', 'without', 'isEmpty', 'pluck'];
 
