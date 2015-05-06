@@ -4,18 +4,19 @@
   "description": "Backbone.Enumerable Class for creating enumerable objects within Backbone.js apps",
   "main": "backbone.enumerable.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "gulp test",
+    "build": "gulp"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ahumphreys87/backbone.enumerable.git"
+    "url": "https://github.com/joefitter/backbone.enumerable.git"
   },
   "author": "Joe Fitter",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ahumphreys87/backbone.enumerable/issues"
+    "url": "https://github.com/joefitter/backbone.enumerable/issues"
   },
-  "homepage": "https://github.com/ahumphreys87/backbone.enumerable",
+  "homepage": "https://github.com/joefitter/backbone.enumerable",
   "dependencies": {
     "backbone": "^1.1.2",
     "underscore": "^1.8.3"
