@@ -66,7 +66,7 @@ Backbone.Enumerable = (function(Backbone, _) {
     },
 
     getNext: function() {
-      this.next()
+      this.next();
       return this.get(this._index);
     },
 

@@ -85,7 +85,7 @@
       },
   
       getNext: function() {
-        this.next()
+        this.next();
         return this.get(this._index);
       },
   
@@ -158,7 +158,7 @@
   })(Backbone, _);
   
 
-  Backbone.Enumerable.VERSION = '<%= version %>';
+  Backbone.Enumerable.VERSION = '0.0.0';
 
   Backbone.Enumerable.noConflict = function() {
     Backbone.Enumerable = previousEnumerable;
