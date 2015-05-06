@@ -23,9 +23,10 @@
   
     var Enumerable = function(items) {
       this._items = [];
-      this._index = null;
+      this._index = 0;
       this._type = null;
       this.length = 0;
+  
       _.each(items, this.add, this);
     };
   
@@ -68,31 +69,29 @@
   
       get: function(index) {
         if (index === undefined) {
-          return null;
+          return undefined;
         }
-        return this._items[index] || null;
+        return this._items[index] || undefined;
       },
   
       next: function() {
         this._traverse(1);
+        return this;
       },
   
       prev: function() {
         this._traverse(-1);
+        return this;
       },
   
       getNext: function() {
-        if (this._currentIndex === this.length - 1) {
-          return this._items[0];
-        }
-        return this._items[this._currentIndex + 1]
+        this.next()
+        return this.get(this._index);
       },
   
       getPrev: function() {
-        if (this._currentIndex === 0) {
-          return this._items[this.length - 1];
-        }
-        return this._items[this._currentIndex - 1];
+        this.prev();
+        return this.get(this._index);
       },
   
       getIndex: function() {
@@ -104,12 +103,13 @@
           return false;
         }
         this._index = index;
+        return this._index;
       },
   
       /**
-  
-      Private Methods
-  
+      *
+      * Private Methods
+      *
       **/
   
       _setType: function(item) {
@@ -118,17 +118,17 @@
       },
   
       _traverse: function(change) {
-        if (!this._index || this.length === 0) {
+        if (this.length === 0) {
           return false;
         }
-        var index = this._currentIndex + change;
+        var index = this._index + change;
         if (index === -1) {
           index = this.length - 1;
         }
         if (index === this.length) {
           index = 0;
         }
-        this._setCurrentItem(this._items[index]);
+        return this.setIndex(index);
       },
   
       _updateLength: function() {
@@ -142,7 +142,7 @@
     // Borrowing this code from Backbone.Collection:
     // http://backbonejs.org/docs/backbone.html#section-121
     var methods = ['forEach', 'each', 'map', 'find', 'detect', 'filter',
-      'select', 'reject', 'every', 'all', 'some', 'any', 'include',
+      'select', 'reject', 'every', 'all', 'some', 'any', 'includes',
       'contains', 'invoke', 'toArray', 'first', 'initial', 'rest',
       'last', 'without', 'isEmpty', 'pluck'];
   
