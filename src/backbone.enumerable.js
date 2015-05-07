@@ -3,6 +3,9 @@
 Backbone.Enumerable = (function(Backbone, _) {
 
   var Enumerable = function(items) {
+    if (items) {
+      items = _.isArray(items) ? items : [items];
+    }
     this._items = [];
     this._index = 0;
     this._type = null;

@@ -22,6 +22,9 @@
   Backbone.Enumerable = (function(Backbone, _) {
   
     var Enumerable = function(items) {
+      if (items) {
+        items = _.isArray(items) ? items : [items];
+      }
       this._items = [];
       this._index = 0;
       this._type = null;
@@ -158,7 +161,7 @@
   })(Backbone, _);
   
 
-  Backbone.Enumerable.VERSION = '0.0.0';
+  Backbone.Enumerable.VERSION = '0.0.1';
 
   Backbone.Enumerable.noConflict = function() {
     Backbone.Enumerable = previousEnumerable;
